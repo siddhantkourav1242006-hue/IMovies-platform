@@ -1,0 +1,41 @@
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (min-width: 600px) {
+  .movie-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-grid {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.movie-grid--loading {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-lg);
+}
+
+@media (min-width: 600px) {
+  .movie-grid--loading {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .movie-grid--loading {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+.movie-grid__skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}

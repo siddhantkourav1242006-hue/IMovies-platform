@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment & Checkout — IMovies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="navbar-brand"><i class="fas fa-film"></i> <span>I</span>Movies</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/pages/bookings.html" class="nav-link">My Bookings</a>
+      <a href="/pages/wishlist.html" class="nav-link">Wishlist</a>
+    </div>
+    <div class="nav-auth" id="nav-auth"></div>
+  </nav>
+
+  <div id="toast-container"></div>
+
+  <main class="container" style="margin-top:90px;">
+    <h1 style="font-size:1.8rem; font-weight:800; color:#fff; margin-bottom:1.5rem;">
+      <i class="fas fa-credit-card" style="color:var(--accent);"></i> Secure Checkout
+    </h1>
+
+    <div class="checkout-grid">
+      <!-- Left: Order Summary & Promo Codes -->
+      <div class="checkout-card">
+        <h3 style="font-size:1.2rem; font-weight:700; color:#fff; margin-bottom:1.2rem;">Booking Summary</h3>
+
+        <div style="margin-bottom:1.2rem;">
+          <h2 id="summary-movie-title" style="font-size:1.4rem; font-weight:800; color:var(--accent);">Movie Title</h2>
+          <p id="summary-theater" style="font-size:0.9rem; color:var(--text-muted);"></p>
+          <p id="summary-datetime" style="font-size:0.85rem; color:var(--text-secondary); margin-top:0.2rem;"></p>
+        </div>
+
+        <div class="order-row">
+          <span>Seats Reserved</span>
+          <span id="summary-seats-list" style="font-weight:600; color:#fff;"></span>
+        </div>
+        <div class="order-row">
+          <span>Ticket Subtotal</span>
+          <span id="summary-ticket-subtotal">₹0</span>
+        </div>
+        <div class="order-row" id="summary-fnb-row" style="display:none;">
+          <span>Food & Beverages</span>
+          <span id="summary-fnb-total">₹0</span>
+        </div>
+        <div class="order-row">
+          <span>Convenience Fee</span>
+          <span id="summary-convenience-fee">₹30</span>
+        </div>
+        <div class="order-row" id="summary-discount-row" style="display:none; color:var(--success);">
+          <span>Promo Code Discount</span>
+          <span id="summary-discount-amount">-₹0</span>
+        </div>
+        <div class="order-row total-row">
+          <span>Grand Total</span>
+          <span id="summary-grand-total" style="color:var(--accent);">₹0</span>
+        </div>
+
+        <!-- Promo Code Box -->
+        <div style="margin-top:2rem;">
+          <label style="font-size:0.85rem; color:var(--text-muted); display:block; margin-bottom:0.4rem;">
+            Have a Promo Code? (Try: <strong>FIRST50</strong>, <strong>FLAT100</strong>, <strong>MOVIE25</strong>)
+          </label>
+          <div class="coupon-group">
+            <input type="text" id="coupon-input" placeholder="ENTER CODE"/>
+            <button type="button" class="btn btn-secondary" id="btn-apply-coupon">Apply</button>
+          </div>
+          <div id="coupon-success-msg"></div>
+        </div>
+      </div>
+
+      <!-- Right: Simulated Card Payment Interface -->
+      <div class="checkout-card">
+        <h3 style="font-size:1.2rem; font-weight:700; color:#fff; margin-bottom:1.5rem;">
+          Payment Method (Instant Simulation)
+        </h3>
+
+        <form id="payment-form">
+          <div class="form-group">
+            <label>Cardholder Name</label>
+            <input type="text" class="form-control" value="John Doe" required/>
+          </div>
+          <div class="form-group">
+            <label>Card Number</label>
+            <input type="text" class="form-control" value="4242 •••• •••• 4242" required/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Expiry Date</label>
+              <input type="text" class="form-control" value="12/28" required/>
+            </div>
+            <div class="form-group">
+              <label>CVV / CVC</label>
+              <input type="password" class="form-control" value="789" required/>
+            </div>
+          </div>
+
+          <div style="background:rgba(0,212,255,0.08); border:1px solid var(--border); border-radius:var(--radius-sm); padding:0.9rem; font-size:0.8rem; color:var(--text-secondary); margin-bottom:1.5rem;">
+            <i class="fas fa-lock" style="color:var(--accent);"></i> 256-Bit SSL Encrypted. Simulated Sandbox Environment (Always Succeeds).
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-block btn-lg" id="btn-submit-payment">
+            <i class="fas fa-check-circle"></i> <span id="btn-pay-text">Pay Now</span>
+          </button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/payment.js"></script>
+</body>
+</html>

@@ -1,0 +1,1677 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iMovies — Movie Ticket Booking</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    /* Design Tokens */
+    :root {
+      --bg-page: #f6f6f7;
+      --bg-card: #ffffff;
+      --bg-header: #ffffff;
+      --text-primary: #111111;
+      --text-secondary: #555555;
+      --text-tertiary: #888888;
+      --accent: #d6283b;
+      --accent-hover: #b91c2e;
+      --border: #e0e0e0;
+      --border-light: #efefef;
+      --radius-sm: 8px;
+      --radius-md: 12px;
+      --font: 'Instrument Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --banner-bg: #121316;
+      --banner-text: #ffffff;
+      --seat-available-border: #9ca3af;
+      --seat-taken: #4b5563;
+      --seat-locked: #d1d5db;
+    }
+
+    [data-theme="dark"] {
+      --bg-page: #0e0e10;
+      --bg-card: #18181b;
+      --bg-header: #18181b;
+      --text-primary: #f0f0f0;
+      --text-secondary: #a0a0a0;
+      --text-tertiary: #666666;
+      --accent: #ef4455;
+      --accent-hover: #dc2f3f;
+      --border: #2a2a2e;
+      --border-light: #222225;
+      --banner-bg: #070709;
+      --banner-text: #f0f0f0;
+      --seat-available-border: #4b5563;
+      --seat-taken: #374151;
+      --seat-locked: #4b5563;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font);
+      background-color: var(--bg-page);
+      color: var(--text-primary);
+      line-height: 1.5;
+      transition: background-color 0.15s ease, color 0.15s ease;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Accessibility Focus */
+    a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    /* Header */
+    header {
+      background-color: var(--bg-header);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 40;
+    }
+
+    .header-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-decoration: none;
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .logo-dot {
+      color: var(--accent);
+    }
+
+    .city-select {
+      appearance: none;
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 6px 28px 6px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666666'%3e%3cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 14px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 0;
+      position: relative;
+      cursor: pointer;
+    }
+
+    .nav-link.active {
+      color: var(--text-primary);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: -15px;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .theme-toggle-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .login-btn {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 8px 16px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .login-btn:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Featured Banner */
+    .featured-banner {
+      background-color: var(--banner-bg);
+      color: var(--banner-text);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .banner-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 48px 20px;
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      align-items: center;
+      gap: 40px;
+    }
+
+    .banner-content h1 {
+      font-size: 36px;
+      font-weight: 700;
+      letter-spacing: -0.8px;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .banner-meta {
+      font-size: 14px;
+      color: #a0a0a0;
+      margin-bottom: 16px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .banner-meta .bullet {
+      opacity: 0.5;
+    }
+
+    .banner-synopsis {
+      font-size: 15px;
+      line-height: 1.6;
+      color: #d1d5db;
+      margin-bottom: 24px;
+      max-width: 560px;
+    }
+
+    .banner-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--accent-hover);
+    }
+
+    .btn-secondary {
+      background-color: transparent;
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      padding: 10px 20px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+
+    .banner-poster {
+      justify-self: end;
+      width: 100%;
+      max-width: 260px;
+    }
+
+    /* Poster Block (2:3 aspect ratio, geometric shape, deep color) */
+    .poster-block {
+      aspect-ratio: 2 / 3;
+      border-radius: var(--radius-md);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 20px;
+      color: #ffffff;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .poster-shape {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.22;
+      pointer-events: none;
+    }
+
+    .poster-block-title {
+      font-size: 20px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .poster-badge {
+      align-self: flex-start;
+      background: rgba(0, 0, 0, 0.4);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      position: relative;
+      z-index: 2;
+    }
+
+    /* Main Section */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 36px 20px 60px;
+    }
+
+    .section-header {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 28px;
+    }
+
+    .section-title {
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    /* Genre Tabs */
+    .genre-tabs {
+      display: flex;
+      gap: 20px;
+      list-style: none;
+      overflow-x: auto;
+      padding-bottom: 4px;
+    }
+
+    .genre-tab {
+      color: var(--text-secondary);
+      font-size: 14px;
+      font-weight: 500;
+      padding: 6px 0;
+      cursor: pointer;
+      white-space: nowrap;
+      position: relative;
+    }
+
+    .genre-tab.active {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .genre-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background-color: var(--accent);
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .search-input {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 7px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 13px;
+      min-width: 180px;
+    }
+
+    .language-select {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+      padding: 7px 28px 7px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 13px;
+      appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23666666'%3e%3cpath fill-rule='evenodd' d='M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z' clip-rule='evenodd'/%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 8px center;
+      background-size: 14px;
+      cursor: pointer;
+    }
+
+    /* Movie Poster Grid */
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 20px;
+    }
+
+    .movie-card {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .movie-card:hover .poster-block {
+      transform: translateY(-4px);
+    }
+
+    .movie-card .poster-block {
+      transition: transform 0.15s ease;
+      margin-bottom: 12px;
+    }
+
+    .movie-card-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .movie-card-title {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .movie-card-meta {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .movie-card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 8px;
+    }
+
+    .rating-badge {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .rating-star {
+      color: #eab308;
+    }
+
+    .btn-book-sm {
+      background-color: var(--accent);
+      color: #ffffff;
+      border: none;
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-family: var(--font);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-book-sm:hover {
+      background-color: var(--accent-hover);
+    }
+
+    /* Modal / Bottom Sheet Booking Flow */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-dialog {
+      background-color: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      max-width: 720px;
+      width: 100%;
+      max-height: 90vh;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-title {
+      font-size: 17px;
+      font-weight: 700;
+    }
+
+    .modal-close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-secondary);
+      font-size: 20px;
+      cursor: pointer;
+      line-height: 1;
+      padding: 4px;
+    }
+
+    .modal-body {
+      padding: 20px;
+    }
+
+    /* Flow Step 1: Shows / Date / Theatre */
+    .date-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      overflow-x: auto;
+      padding-bottom: 6px;
+    }
+
+    .date-pill {
+      border: 1px solid var(--border);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      padding: 8px 14px;
+      border-radius: var(--radius-sm);
+      text-align: center;
+      font-size: 13px;
+      cursor: pointer;
+      min-width: 68px;
+    }
+
+    .date-pill.selected {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+      font-weight: 600;
+    }
+
+    .theatre-card {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 14px;
+    }
+
+    .theatre-name {
+      font-size: 15px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .theatre-address {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .showtime-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .showtime-chip {
+      border: 1px solid var(--border);
+      background: var(--bg-page);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .showtime-chip:hover {
+      border-color: var(--accent);
+    }
+
+    /* Flow Step 2: Seat Map */
+    .seat-map-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .timer-badge {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      padding: 6px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--accent);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .screen-container {
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      margin: 10px 0 16px;
+    }
+
+    .screen-curve {
+      width: 100%;
+      height: 20px;
+    }
+
+    .screen-label {
+      font-size: 11px;
+      color: var(--text-tertiary);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .seat-grid {
+      display: grid;
+      gap: 8px;
+    }
+
+    .seat-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .seat-row-label {
+      width: 20px;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      text-align: right;
+    }
+
+    .seat-box {
+      width: 24px;
+      height: 24px;
+      border-radius: 4px;
+      font-size: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.1s ease, border-color 0.1s ease;
+    }
+
+    .seat-box.available {
+      border: 1px solid var(--seat-available-border);
+      background-color: transparent;
+      color: var(--text-secondary);
+    }
+
+    .seat-box.available:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .seat-box.selected {
+      background-color: var(--accent);
+      border: 1px solid var(--accent);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .seat-box.booked {
+      background-color: var(--seat-taken);
+      border: 1px solid var(--seat-taken);
+      color: #ffffff;
+      cursor: not-allowed;
+      opacity: 0.4;
+    }
+
+    .seat-box.locked {
+      background-color: var(--seat-locked);
+      border: 1px solid var(--seat-locked);
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    .seat-legend {
+      display: flex;
+      gap: 20px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-top: 12px;
+    }
+
+    .legend-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .legend-swatch {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+    }
+
+    .legend-swatch.available {
+      border: 1px solid var(--seat-available-border);
+    }
+
+    .legend-swatch.selected {
+      background-color: var(--accent);
+    }
+
+    .legend-swatch.booked {
+      background-color: var(--seat-taken);
+      opacity: 0.4;
+    }
+
+    /* Checkout & Ticket views */
+    .summary-card {
+      background: var(--bg-page);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      padding: 6px 0;
+      color: var(--text-secondary);
+    }
+
+    .summary-row.total {
+      font-weight: 700;
+      color: var(--text-primary);
+      border-top: 1px solid var(--border);
+      margin-top: 8px;
+      padding-top: 10px;
+      font-size: 16px;
+    }
+
+    .ticket-container {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg-card);
+      padding: 24px;
+      max-width: 440px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .ticket-qr {
+      background: #ffffff;
+      padding: 12px;
+      display: inline-block;
+      border-radius: var(--radius-sm);
+      margin: 16px 0;
+      border: 1px solid #e0e0e0;
+    }
+
+    .ticket-success-pill {
+      background: rgba(16, 185, 129, 0.1);
+      color: #10b981;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      display: inline-block;
+      margin-bottom: 12px;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #0b0b0d;
+      color: #9ca3af;
+      border-top: 1px solid #1f2937;
+      margin-top: auto;
+      padding: 48px 20px 24px;
+      font-size: 13px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 36px;
+      margin-bottom: 36px;
+    }
+
+    .footer-col h4 {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 14px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .footer-col a {
+      color: #9ca3af;
+      text-decoration: none;
+    }
+
+    .footer-col a:hover {
+      color: #ffffff;
+    }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      border-top: 1px solid #1f2937;
+      padding-top: 20px;
+      text-align: center;
+      font-size: 12px;
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .movie-grid {
+        grid-template-columns: repeat(3, 1fr);
+      }
+      .footer-inner {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .banner-inner {
+        grid-template-columns: 1fr;
+        padding: 32px 16px;
+      }
+      .banner-poster {
+        display: none;
+      }
+      .movie-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 14px;
+      }
+      .nav-links {
+        display: none;
+      }
+      .modal-dialog {
+        border-radius: var(--radius-md) var(--radius-md) 0 0;
+        max-height: 85vh;
+        margin-top: auto;
+      }
+      .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+      }
+      .footer-inner {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="header-left">
+        <div class="logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">
+          i<span class="logo-dot">●</span>Movies
+        </div>
+        <select class="city-select" id="citySelect" aria-label="Select city">
+          <option value="Mumbai">Mumbai</option>
+          <option value="Delhi">Delhi</option>
+          <option value="Bangalore">Bangalore</option>
+          <option value="Hyderabad">Hyderabad</option>
+        </select>
+        <ul class="nav-links">
+          <li><span class="nav-link active">Now Showing</span></li>
+          <li><span class="nav-link" onclick="filterGenre('Action')">Movies</span></li>
+          <li><span class="nav-link" onclick="openMyTickets()">My Tickets</span></li>
+        </ul>
+      </div>
+
+      <div class="header-right">
+        <button class="theme-toggle-btn" id="themeToggle" aria-label="Toggle theme">
+          <svg id="themeIcon" width="16" height="16" fill="currentColor" viewBox="0 0 20 20">
+            <path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" />
+          </svg>
+        </button>
+        <button class="login-btn" onclick="openLoginModal()">Log in</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Featured Movie Banner -->
+  <section class="featured-banner">
+    <div class="banner-inner">
+      <div class="banner-content">
+        <h1 id="featuredBannerTitle">Dune: Part Two</h1>
+        <div class="banner-meta">
+          <span>PG-13</span>
+          <span class="bullet">•</span>
+          <span>2h 46m</span>
+          <span class="bullet">•</span>
+          <span>English, Hindi</span>
+          <span class="bullet">•</span>
+          <span>Sci-Fi, Adventure</span>
+        </div>
+        <p class="banner-synopsis">
+          Paul Atreides unites with Chani and the Fremen while seeking revenge against the conspirators who destroyed his family.
+        </p>
+        <div class="banner-actions">
+          <button class="btn-primary" onclick="startBooking('dune-2')">Book tickets</button>
+          <button class="btn-secondary" onclick="scrollToGrid()">Browse all movies</button>
+        </div>
+      </div>
+      <div class="banner-poster">
+        <div class="poster-block" style="background-color: #1a1a2e;">
+          <svg class="poster-shape" width="160" height="160" viewBox="0 0 100 100">
+            <circle cx="50" cy="50" r="40" stroke="#ffffff" stroke-width="8" fill="none" />
+          </svg>
+          <span class="poster-badge">IMAX 4K</span>
+          <div class="poster-block-title">Dune: Part Two</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content -->
+  <main id="mainGrid">
+    <div class="section-header">
+      <h2 class="section-title">Now showing in <span id="cityLabel">Mumbai</span></h2>
+      <div class="controls-row">
+        <ul class="genre-tabs">
+          <li class="genre-tab active" onclick="filterGenre('All', this)">All</li>
+          <li class="genre-tab" onclick="filterGenre('Action', this)">Action</li>
+          <li class="genre-tab" onclick="filterGenre('Sci-Fi', this)">Sci-Fi</li>
+          <li class="genre-tab" onclick="filterGenre('Drama', this)">Drama</li>
+          <li class="genre-tab" onclick="filterGenre('Thriller', this)">Thriller</li>
+          <li class="genre-tab" onclick="filterGenre('Comedy', this)">Comedy</li>
+        </ul>
+        <div class="filter-group">
+          <input type="text" class="search-input" id="movieSearch" placeholder="Search movies..." oninput="handleSearch(this.value)">
+          <select class="language-select" id="langSelect" onchange="handleLang(this.value)">
+            <option value="All">All Languages</option>
+            <option value="English">English</option>
+            <option value="Hindi">Hindi</option>
+            <option value="Tamil">Tamil</option>
+            <option value="Telugu">Telugu</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Movie Poster Grid -->
+    <div class="movie-grid" id="movieGrid">
+      <!-- Injected via JS -->
+    </div>
+  </main>
+
+  <!-- Booking Modal Flow -->
+  <div class="modal-overlay" id="bookingModal" role="dialog" aria-modal="true">
+    <div class="modal-dialog">
+      <div class="modal-header">
+        <div class="modal-title" id="modalStepTitle">Select Showtime</div>
+        <button class="modal-close-btn" onclick="closeBookingModal()" aria-label="Close dialog">&times;</button>
+      </div>
+      <div class="modal-body" id="modalStepBody">
+        <!-- Step views rendered here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-col">
+        <div class="logo" style="margin-bottom: 12px; color: #ffffff;">
+          i<span class="logo-dot">●</span>Movies
+        </div>
+        <p style="font-size: 13px; line-height: 1.6; max-width: 320px;">
+          Calm, fast cinema ticketing. Browse now-showing titles, pick live seats, and receive verified digital tickets in under a minute.
+        </p>
+      </div>
+      <div class="footer-col">
+        <h4>Cinemas</h4>
+        <ul>
+          <li><a href="#!">PVR ICON</a></li>
+          <li><a href="#!">INOX Megaplex</a></li>
+          <li><a href="#!">Cinepolis IMAX</a></li>
+          <li><a href="#!">Miraj Cinemas</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#!">Ticket Cancellation</a></li>
+          <li><a href="#!">Reschedule Policy</a></li>
+          <li><a href="#!">Payment Issues</a></li>
+          <li><a href="#!">Contact Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Legal</h4>
+        <ul>
+          <li><a href="#!">Terms of Service</a></li>
+          <li><a href="#!">Privacy Policy</a></li>
+          <li><a href="#!">Security</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 iMovies Entertainment Ltd. All rights reserved. Built with precision.
+    </div>
+  </footer>
+
+  <script>
+    // Data definition: 10 movies with flat colors and geometric shapes
+    const moviesData = [
+      {
+        id: 'dune-2',
+        title: 'Dune: Part Two',
+        slug: 'dune-2',
+        genre: 'Sci-Fi',
+        language: 'English',
+        duration: '2h 46m',
+        rating: 8.8,
+        color: '#1a1a2e',
+        shape: 'circle',
+        price: 350
+      },
+      {
+        id: 'oppenheimer',
+        title: 'Oppenheimer',
+        slug: 'oppenheimer',
+        genre: 'Drama',
+        language: 'English',
+        duration: '3h 00m',
+        rating: 8.9,
+        color: '#264653',
+        shape: 'bars',
+        price: 320
+      },
+      {
+        id: 'jawan',
+        title: 'Jawan',
+        slug: 'jawan',
+        genre: 'Action',
+        language: 'Hindi',
+        duration: '2h 49m',
+        rating: 7.8,
+        color: '#e94560',
+        shape: 'triangle',
+        price: 280
+      },
+      {
+        id: 'leo',
+        title: 'Leo',
+        slug: 'leo',
+        genre: 'Action',
+        language: 'Tamil',
+        duration: '2h 44m',
+        rating: 7.9,
+        color: '#1b4332',
+        shape: 'diamond',
+        price: 260
+      },
+      {
+        id: 'salaar',
+        title: 'Salaar',
+        slug: 'salaar',
+        genre: 'Action',
+        language: 'Telugu',
+        duration: '2h 55m',
+        rating: 7.5,
+        color: '#2b2d42',
+        shape: 'square',
+        price: 270
+      },
+      {
+        id: 'past-lives',
+        title: 'Past Lives',
+        slug: 'past-lives',
+        genre: 'Drama',
+        language: 'English',
+        duration: '1h 45m',
+        rating: 8.0,
+        color: '#d4a373',
+        shape: 'waves',
+        price: 290
+      },
+      {
+        id: 'interstellar-rerun',
+        title: 'Interstellar',
+        slug: 'interstellar',
+        genre: 'Sci-Fi',
+        language: 'English',
+        duration: '2h 49m',
+        rating: 8.7,
+        color: '#0f3460',
+        shape: 'ring',
+        price: 350
+      },
+      {
+        id: '12th-fail',
+        title: '12th Fail',
+        slug: '12th-fail',
+        genre: 'Drama',
+        language: 'Hindi',
+        duration: '2h 27m',
+        rating: 9.1,
+        color: '#533483',
+        shape: 'hexagon',
+        price: 240
+      },
+      {
+        id: 'manjummel-boys',
+        title: 'Manjummel Boys',
+        slug: 'manjummel-boys',
+        genre: 'Thriller',
+        language: 'Tamil',
+        duration: '2h 15m',
+        rating: 8.5,
+        color: '#16213e',
+        shape: 'cross',
+        price: 250
+      },
+      {
+        id: 'madgaon-express',
+        title: 'Madgaon Express',
+        slug: 'madgaon-express',
+        genre: 'Comedy',
+        language: 'Hindi',
+        duration: '2h 23m',
+        rating: 7.4,
+        color: '#8d99ae',
+        shape: 'star',
+        price: 220
+      }
+    ];
+
+    // SVG shape helper
+    function getShapeSvg(shape) {
+      switch (shape) {
+        case 'circle':
+          return `<circle cx="50" cy="50" r="38" stroke="#ffffff" stroke-width="8" fill="none" />`;
+        case 'triangle':
+          return `<polygon points="50,15 85,80 15,80" stroke="#ffffff" stroke-width="8" fill="none" />`;
+        case 'diamond':
+          return `<polygon points="50,15 85,50 50,85 15,50" stroke="#ffffff" stroke-width="8" fill="none" />`;
+        case 'hexagon':
+          return `<polygon points="50,15 82,32 82,68 50,85 18,68 18,32" stroke="#ffffff" stroke-width="7" fill="none" />`;
+        case 'square':
+          return `<rect x="20" y="20" width="60" height="60" stroke="#ffffff" stroke-width="8" fill="none" />`;
+        case 'ring':
+          return `<circle cx="50" cy="50" r="30" stroke="#ffffff" stroke-width="14" fill="none" />`;
+        case 'bars':
+          return `<rect x="22" y="20" width="14" height="60" fill="#ffffff" /><rect x="44" y="20" width="14" height="60" fill="#ffffff" /><rect x="66" y="20" width="14" height="60" fill="#ffffff" />`;
+        case 'cross':
+          return `<rect x="42" y="15" width="16" height="70" fill="#ffffff" /><rect x="15" y="42" width="70" height="16" fill="#ffffff" />`;
+        case 'star':
+          return `<polygon points="50,10 61,35 88,35 66,52 75,77 50,60 25,77 34,52 12,35 39,35" stroke="#ffffff" stroke-width="6" fill="none" />`;
+        case 'waves':
+        default:
+          return `<path d="M 15 35 Q 32 15 50 35 T 85 35 M 15 65 Q 32 45 50 65 T 85 65" stroke="#ffffff" stroke-width="8" fill="none" />`;
+      }
+    }
+
+    // State
+    let currentGenre = 'All';
+    let searchQuery = '';
+    let selectedLang = 'All';
+    let currentCity = 'Mumbai';
+
+    let activeBooking = {
+      movie: null,
+      date: 'Today, 24 Oct',
+      theatre: 'PVR ICON, Palladium Mall',
+      time: '07:30 PM',
+      seats: [],
+      pricePerSeat: 320,
+      timerSeconds: 300,
+      timerInterval: null
+    };
+
+    // Initialize Page
+    document.addEventListener('DOMContentLoaded', () => {
+      renderMovies();
+      setupTheme();
+      setupCity();
+    });
+
+    function renderMovies() {
+      const grid = document.getElementById('movieGrid');
+      const filtered = moviesData.filter(m => {
+        const matchGenre = currentGenre === 'All' || m.genre === currentGenre;
+        const matchSearch = m.title.toLowerCase().includes(searchQuery.toLowerCase());
+        const matchLang = selectedLang === 'All' || m.language === selectedLang;
+        return matchGenre && matchSearch && matchLang;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = `
+          <div style="grid-column: 1 / -1; padding: 48px 0; text-align: center; color: var(--text-secondary);">
+            <p style="font-size: 16px; font-weight: 600; margin-bottom: 6px;">No movies found</p>
+            <p style="font-size: 13px;">Try selecting another genre or language filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(movie => `
+        <div class="movie-card" onclick="startBooking('${movie.slug}')">
+          <div class="poster-block" style="background-color: ${movie.color};">
+            <svg class="poster-shape" width="130" height="130" viewBox="0 0 100 100">
+              ${getShapeSvg(movie.shape)}
+            </svg>
+            <span class="poster-badge">${movie.genre}</span>
+            <div class="poster-block-title">${movie.title}</div>
+          </div>
+          <div class="movie-card-info">
+            <div class="movie-card-title">${movie.title}</div>
+            <div class="movie-card-meta">
+              <span>${movie.language}</span>
+              <span>•</span>
+              <span>${movie.duration}</span>
+            </div>
+            <div class="movie-card-footer">
+              <span class="rating-badge">
+                <span class="rating-star">★</span> ${movie.rating}
+              </span>
+              <button class="btn-book-sm" onclick="event.stopPropagation(); startBooking('${movie.slug}')">Book</button>
+            </div>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function filterGenre(genre, element) {
+      currentGenre = genre;
+      if (element) {
+        document.querySelectorAll('.genre-tab').forEach(t => t.classList.remove('active'));
+        element.classList.add('active');
+      }
+      renderMovies();
+    }
+
+    function handleSearch(val) {
+      searchQuery = val;
+      renderMovies();
+    }
+
+    function handleLang(val) {
+      selectedLang = val;
+      renderMovies();
+    }
+
+    function setupTheme() {
+      const toggleBtn = document.getElementById('themeToggle');
+      toggleBtn.addEventListener('click', () => {
+        const root = document.documentElement;
+        const isDark = root.getAttribute('data-theme') === 'dark';
+        root.setAttribute('data-theme', isDark ? 'light' : 'dark');
+      });
+    }
+
+    function setupCity() {
+      const select = document.getElementById('citySelect');
+      select.addEventListener('change', (e) => {
+        currentCity = e.target.value;
+        document.getElementById('cityLabel').innerText = currentCity;
+      });
+    }
+
+    function scrollToGrid() {
+      document.getElementById('mainGrid').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Modal Booking Flow Controller
+    function startBooking(movieSlug) {
+      const movie = moviesData.find(m => m.slug === movieSlug);
+      if (!movie) return;
+
+      activeBooking.movie = movie;
+      activeBooking.seats = [];
+      activeBooking.pricePerSeat = movie.price;
+      
+      openModal();
+      renderShowtimesStep();
+    }
+
+    function openModal() {
+      document.getElementById('bookingModal').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeBookingModal() {
+      document.getElementById('bookingModal').classList.remove('open');
+      document.body.style.overflow = '';
+      if (activeBooking.timerInterval) {
+        clearInterval(activeBooking.timerInterval);
+        activeBooking.timerInterval = null;
+      }
+    }
+
+    // Step 1: Showtimes & Theatres
+    function renderShowtimesStep() {
+      document.getElementById('modalStepTitle').innerText = `${activeBooking.movie.title} — Select Showtime`;
+      const body = document.getElementById('modalStepBody');
+      
+      body.innerHTML = `
+        <div class="date-row">
+          <div class="date-pill selected" onclick="selectDate(this, 'Today, 24 Oct')">Today<br><b>24 Oct</b></div>
+          <div class="date-pill" onclick="selectDate(this, 'Fri, 25 Oct')">Fri<br><b>25 Oct</b></div>
+          <div class="date-pill" onclick="selectDate(this, 'Sat, 26 Oct')">Sat<br><b>26 Oct</b></div>
+          <div class="date-pill" onclick="selectDate(this, 'Sun, 27 Oct')">Sun<br><b>27 Oct</b></div>
+        </div>
+
+        <div class="theatre-card">
+          <div class="theatre-name">PVR ICON, Grand Central</div>
+          <div class="theatre-address">Floor 4, Sector 12, ${currentCity} • Dolby Atmos</div>
+          <div class="showtime-chips">
+            <button class="showtime-chip" onclick="proceedToSeats('PVR ICON, Grand Central', '11:15 AM')">11:15 AM</button>
+            <button class="showtime-chip" onclick="proceedToSeats('PVR ICON, Grand Central', '02:45 PM')">02:45 PM</button>
+            <button class="showtime-chip" onclick="proceedToSeats('PVR ICON, Grand Central', '06:30 PM')">06:30 PM</button>
+            <button class="showtime-chip" onclick="proceedToSeats('PVR ICON, Grand Central', '09:45 PM')">09:45 PM</button>
+          </div>
+        </div>
+
+        <div class="theatre-card">
+          <div class="theatre-name">INOX Megaplex</div>
+          <div class="theatre-address">Phoenix Mall, ${currentCity} • IMAX Laser</div>
+          <div class="showtime-chips">
+            <button class="showtime-chip" onclick="proceedToSeats('INOX Megaplex', '01:00 PM')">01:00 PM</button>
+            <button class="showtime-chip" onclick="proceedToSeats('INOX Megaplex', '04:30 PM')">04:30 PM</button>
+            <button class="showtime-chip" onclick="proceedToSeats('INOX Megaplex', '08:00 PM')">08:00 PM</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function selectDate(elem, dateStr) {
+      document.querySelectorAll('.date-pill').forEach(d => d.classList.remove('selected'));
+      elem.classList.add('selected');
+      activeBooking.date = dateStr;
+    }
+
+    function proceedToSeats(theatre, time) {
+      activeBooking.theatre = theatre;
+      activeBooking.time = time;
+      renderSeatsStep();
+    }
+
+    // Step 2: Live Seat Map
+    function renderSeatsStep() {
+      document.getElementById('modalStepTitle').innerText = `${activeBooking.movie.title} • ${activeBooking.time}`;
+      const body = document.getElementById('modalStepBody');
+
+      // Start 5-min hold countdown
+      activeBooking.timerSeconds = 300;
+      if (activeBooking.timerInterval) clearInterval(activeBooking.timerInterval);
+      activeBooking.timerInterval = setInterval(() => {
+        activeBooking.timerSeconds--;
+        const mins = Math.floor(activeBooking.timerSeconds / 60);
+        const secs = activeBooking.timerSeconds % 60;
+        const timerElem = document.getElementById('seatCountdown');
+        if (timerElem) {
+          timerElem.innerText = `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+        if (activeBooking.timerSeconds <= 0) {
+          clearInterval(activeBooking.timerInterval);
+          alert('Seat hold expired. Please reselect your seats.');
+          activeBooking.seats = [];
+          renderSeatsStep();
+        }
+      }, 1000);
+
+      // Generate rows A to F with 8 seats each
+      const rows = ['F', 'E', 'D', 'C', 'B', 'A'];
+      const bookedSet = new Set(['B3', 'B4', 'D5', 'D6', 'E2']);
+
+      let gridHtml = '';
+      rows.forEach(r => {
+        gridHtml += `<div class="seat-row"><span class="seat-row-label">${r}</span>`;
+        for (let i = 1; i <= 8; i++) {
+          const seatId = `${r}${i}`;
+          const isBooked = bookedSet.has(seatId);
+          const isSelected = activeBooking.seats.includes(seatId);
+          const stateClass = isBooked ? 'booked' : (isSelected ? 'selected' : 'available');
+          const disabledAttr = isBooked ? 'aria-disabled="true"' : `onclick="toggleSeat('${seatId}', this)"`;
+          gridHtml += `<div class="seat-box ${stateClass}" ${disabledAttr} aria-label="Seat ${seatId}">${i}</div>`;
+        }
+        gridHtml += `</div>`;
+      });
+
+      body.innerHTML = `
+        <div class="seat-map-container">
+          <div class="timer-badge">
+            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+            Seats held for <span id="seatCountdown">05:00</span>
+          </div>
+
+          <div class="screen-container">
+            <svg class="screen-curve" viewBox="0 0 300 20">
+              <path d="M 10 15 Q 150 2 290 15" stroke="var(--accent)" stroke-width="3" fill="none" />
+            </svg>
+            <div class="screen-label">Cinema Screen</div>
+          </div>
+
+          <div class="seat-grid">
+            ${gridHtml}
+          </div>
+
+          <div class="seat-legend">
+            <div class="legend-item"><div class="legend-swatch available"></div> Available</div>
+            <div class="legend-item"><div class="legend-swatch selected"></div> Selected</div>
+            <div class="legend-item"><div class="legend-swatch booked"></div> Taken</div>
+          </div>
+        </div>
+
+        <div class="summary-card" style="margin-top: 20px;">
+          <div class="summary-row">
+            <span>Selected Seats</span>
+            <span id="selectedSeatsLabel">${activeBooking.seats.join(', ') || 'None'}</span>
+          </div>
+          <div class="summary-row">
+            <span>Ticket Price</span>
+            <span>₹${activeBooking.pricePerSeat} per seat</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total Amount</span>
+            <span id="seatTotalAmount">₹${activeBooking.seats.length * activeBooking.pricePerSeat}</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button class="btn-secondary" onclick="renderShowtimesStep()" style="color: var(--text-primary); border-color: var(--border);">Back</button>
+          <button class="btn-primary" id="btnContinueCheckout" onclick="proceedToCheckout()" ${activeBooking.seats.length === 0 ? 'disabled style="opacity: 0.5; cursor: not-allowed;"' : ''}>
+            Proceed to Pay
+          </button>
+        </div>
+      `;
+    }
+
+    function toggleSeat(seatId, elem) {
+      const idx = activeBooking.seats.indexOf(seatId);
+      if (idx > -1) {
+        activeBooking.seats.splice(idx, 1);
+        elem.classList.remove('selected');
+        elem.classList.add('available');
+      } else {
+        if (activeBooking.seats.length >= 6) {
+          alert('Maximum 6 seats allowed per booking.');
+          return;
+        }
+        activeBooking.seats.push(seatId);
+        elem.classList.remove('available');
+        elem.classList.add('selected');
+      }
+
+      // Update UI labels
+      const label = document.getElementById('selectedSeatsLabel');
+      const total = document.getElementById('seatTotalAmount');
+      const btn = document.getElementById('btnContinueCheckout');
+      if (label) label.innerText = activeBooking.seats.join(', ') || 'None';
+      if (total) total.innerText = `₹${activeBooking.seats.length * activeBooking.pricePerSeat}`;
+      if (btn) {
+        if (activeBooking.seats.length > 0) {
+          btn.removeAttribute('disabled');
+          btn.style.opacity = '1';
+          btn.style.cursor = 'pointer';
+        } else {
+          btn.setAttribute('disabled', 'true');
+          btn.style.opacity = '0.5';
+          btn.style.cursor = 'not-allowed';
+        }
+      }
+    }
+
+    // Step 3: Checkout
+    function proceedToCheckout() {
+      if (activeBooking.seats.length === 0) return;
+      document.getElementById('modalStepTitle').innerText = 'Checkout';
+      const body = document.getElementById('modalStepBody');
+
+      const total = activeBooking.seats.length * activeBooking.pricePerSeat;
+      const convenienceFee = 30;
+      const grandTotal = total + convenienceFee;
+
+      body.innerHTML = `
+        <div class="summary-card">
+          <div style="font-weight: 700; font-size: 16px; margin-bottom: 4px;">${activeBooking.movie.title}</div>
+          <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 14px;">
+            ${activeBooking.theatre} • ${activeBooking.date} • ${activeBooking.time}
+          </div>
+          
+          <div class="summary-row">
+            <span>Seats (${activeBooking.seats.length})</span>
+            <span>${activeBooking.seats.join(', ')}</span>
+          </div>
+          <div class="summary-row">
+            <span>Tickets Subtotal</span>
+            <span>₹${total}</span>
+          </div>
+          <div class="summary-row">
+            <span>Convenience Fee (incl. GST)</span>
+            <span>₹${convenienceFee}</span>
+          </div>
+          <div class="summary-row total">
+            <span>Total Payable</span>
+            <span>₹${grandTotal}</span>
+          </div>
+        </div>
+
+        <div style="margin-bottom: 20px;">
+          <div style="font-size: 13px; font-weight: 600; margin-bottom: 8px;">Payment Gateway (Test Mode)</div>
+          <div style="padding: 12px; border: 1px solid var(--border); border-radius: var(--radius-sm); font-size: 13px; color: var(--text-secondary); display: flex; align-items: center; justify-content: space-between;">
+            <span>Razorpay / UPI / Card Simulation</span>
+            <span style="color: #10b981; font-weight: 600;">Ready</span>
+          </div>
+        </div>
+
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button class="btn-secondary" onclick="renderSeatsStep()" style="color: var(--text-primary); border-color: var(--border);">Change Seats</button>
+          <button class="btn-primary" onclick="simulatePayment(${grandTotal})">Pay ₹${grandTotal}</button>
+        </div>
+      `;
+    }
+
+    function simulatePayment(amount) {
+      const body = document.getElementById('modalStepBody');
+      body.innerHTML = `
+        <div style="padding: 40px 0; text-align: center;">
+          <div style="display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;"></div>
+          <p style="margin-top: 16px; font-size: 14px; font-weight: 500;">Securing your tickets & verifying payment...</p>
+        </div>
+        <style>@keyframes spin { to { transform: rotate(360deg); } }</style>
+      `;
+
+      setTimeout(() => {
+        if (activeBooking.timerInterval) clearInterval(activeBooking.timerInterval);
+        renderTicketView(amount);
+      }, 1200);
+    }
+
+    // Step 4: Digital Ticket with QR Code
+    function renderTicketView(totalPaid) {
+      document.getElementById('modalStepTitle').innerText = 'Booking Confirmed';
+      const body = document.getElementById('modalStepBody');
+
+      const bookingId = 'IM-' + Math.floor(100000 + Math.random() * 900000);
+
+      body.innerHTML = `
+        <div class="ticket-container">
+          <div class="ticket-success-pill">✓ Payment Verified</div>
+          <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">${activeBooking.movie.title}</h3>
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">Booking ID: ${bookingId}</p>
+
+          <!-- SVG Mock QR Code -->
+          <div class="ticket-qr">
+            <svg width="130" height="130" viewBox="0 0 100 100" fill="#111111">
+              <rect x="5" y="5" width="25" height="25" fill="#111111"/>
+              <rect x="8" y="8" width="19" height="19" fill="#ffffff"/>
+              <rect x="12" y="12" width="11" height="11" fill="#111111"/>
+
+              <rect x="70" y="5" width="25" height="25" fill="#111111"/>
+              <rect x="73" y="8" width="19" height="19" fill="#ffffff"/>
+              <rect x="77" y="12" width="11" height="11" fill="#111111"/>
+
+              <rect x="5" y="70" width="25" height="25" fill="#111111"/>
+              <rect x="8" y="73" width="19" height="19" fill="#ffffff"/>
+              <rect x="12" y="77" width="11" height="11" fill="#111111"/>
+
+              <rect x="35" y="10" width="8" height="8"/>
+              <rect x="48" y="10" width="8" height="8"/>
+              <rect x="40" y="24" width="16" height="8"/>
+              <rect x="35" y="40" width="12" height="12"/>
+              <rect x="55" y="38" width="8" height="16"/>
+              <rect x="70" y="45" width="14" height="8"/>
+              <rect x="40" y="65" width="8" height="18"/>
+              <rect x="55" y="70" width="16" height="8"/>
+              <rect x="75" y="70" width="12" height="12"/>
+            </svg>
+          </div>
+
+          <div style="text-align: left; background: var(--bg-page); border-radius: var(--radius-sm); padding: 12px; font-size: 13px; display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 16px;">
+            <div><span style="color: var(--text-tertiary); font-size: 11px;">THEATRE</span><br><b>${activeBooking.theatre}</b></div>
+            <div><span style="color: var(--text-tertiary); font-size: 11px;">SHOWTIME</span><br><b>${activeBooking.date}, ${activeBooking.time}</b></div>
+            <div><span style="color: var(--text-tertiary); font-size: 11px;">SEATS</span><br><b>${activeBooking.seats.join(', ')}</b></div>
+            <div><span style="color: var(--text-tertiary); font-size: 11px;">TOTAL PAID</span><br><b>₹${totalPaid}</b></div>
+          </div>
+
+          <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 16px;">A digital copy and SMS confirmation have been sent to your registered phone.</p>
+
+          <button class="btn-primary" style="width: 100%;" onclick="closeBookingModal()">Done</button>
+        </div>
+      `;
+    }
+
+    function openMyTickets() {
+      alert("My Tickets: you currently have 1 upcoming ticket (Dune: Part Two at PVR ICON). Use the web app for full ticket management.");
+    }
+
+    function openLoginModal() {
+      alert("Login simulation: In the full app, JWT authentication handles User and Admin roles.");
+    }
+  </script>
+</body>
+</html>

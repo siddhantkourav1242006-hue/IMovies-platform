@@ -1,0 +1,77 @@
+.seat-selection-page {
+  padding-bottom: 64px;
+}
+
+.seat-page-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.seat-page-header {
+  background-color: var(--bg-card);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 0;
+  margin-bottom: 32px;
+}
+
+.seat-page-header .seat-page-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.show-movie-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+  margin-bottom: 4px;
+}
+
+.show-theatre-line {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.seat-layout-split {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 36px;
+  align-items: start;
+}
+
+.seat-map-panel {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 32px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.booking-summary-panel {
+  position: sticky;
+  top: 80px;
+}
+
+@media (max-width: 900px) {
+  .seat-layout-split {
+    grid-template-columns: 1fr;
+  }
+  .booking-summary-panel {
+    position: static;
+  }
+}
+
+@media (max-width: 600px) {
+  .seat-page-container {
+    padding: 0 16px;
+  }
+  .seat-map-panel {
+    padding: 20px 12px;
+    overflow-x: auto;
+  }
+}

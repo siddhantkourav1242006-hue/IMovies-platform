@@ -1,0 +1,70 @@
+.showtime-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+}
+
+.showtime-theatre {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md) var(--space-lg);
+}
+
+.showtime-theatre__name {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.showtime-theatre__address {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-bottom: var(--space-md);
+}
+
+.showtime-theatre__times {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.showtime-btn {
+  padding: 8px 16px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: border-color var(--transition-fast), color var(--transition-fast);
+}
+
+.showtime-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.showtime-btn--selected {
+  border-color: var(--accent);
+  background-color: var(--accent);
+  color: #ffffff;
+}
+
+.showtime-btn--sold-out {
+  opacity: 0.4;
+  cursor: not-allowed;
+  text-decoration: line-through;
+}
+
+.showtime-btn__price {
+  display: block;
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-top: 2px;
+}
+
+.showtime-btn--selected .showtime-btn__price {
+  color: rgba(255, 255, 255, 0.7);
+}

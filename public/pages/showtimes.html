@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Select Showtimes — IMovies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="navbar-brand"><i class="fas fa-film"></i> <span>I</span>Movies</a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Home</a>
+      <a href="/pages/bookings.html" class="nav-link">My Bookings</a>
+      <a href="/pages/wishlist.html" class="nav-link">Wishlist</a>
+    </div>
+    <div class="nav-auth" id="nav-auth"></div>
+    <button class="hamburger" id="hamburger"><span></span><span></span><span></span></button>
+  </nav>
+
+  <div class="nav-mobile" id="nav-mobile"></div>
+  <div id="toast-container"></div>
+
+  <!-- Movie Header Ribbon -->
+  <div style="background:var(--bg-secondary); border-bottom:1px solid var(--border); margin-top:70px; padding:1.2rem 0;">
+    <div class="container" style="display:flex; align-items:center; gap:1.2rem;">
+      <img id="show-movie-poster" src="" style="width:48px; height:68px; object-fit:cover; border-radius:4px;"/>
+      <div>
+        <h2 id="show-movie-title" style="font-size:1.3rem; font-weight:700; color:#fff;">Loading Movie...</h2>
+        <p id="show-movie-meta" style="font-size:0.85rem; color:var(--text-muted);"></p>
+      </div>
+    </div>
+  </div>
+
+  <main class="container" style="padding-top:1.5rem;">
+    <!-- 7-Day Date Filter -->
+    <div class="date-picker-bar" id="date-picker-bar"></div>
+
+    <div style="margin-bottom:1.5rem; display:flex; justify-content:space-between; align-items:center;">
+      <h3 style="font-size:1.2rem; font-weight:700; color:#fff;">Available Theaters & Shows</h3>
+      <div style="display:flex; gap:1.5rem; font-size:0.8rem; color:var(--text-secondary);">
+        <span><i class="fas fa-circle" style="color:var(--standard-green); font-size:0.55rem;"></i> Standard ₹150</span>
+        <span><i class="fas fa-circle" style="color:var(--premium-purple); font-size:0.55rem;"></i> Premium ₹250</span>
+        <span><i class="fas fa-circle" style="color:var(--vip-gold); font-size:0.55rem;"></i> VIP ₹400</span>
+      </div>
+    </div>
+
+    <!-- Theaters & Showtimes Grid Container -->
+    <div id="showtimes-container"></div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-bottom">&copy; 2026 IMovies. All rights reserved.</div>
+  </footer>
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/movieDetail.js"></script>
+</body>
+</html>

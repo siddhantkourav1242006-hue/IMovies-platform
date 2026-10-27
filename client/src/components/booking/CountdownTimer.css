@@ -1,0 +1,28 @@
+.countdown-timer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.countdown-timer__icon {
+  display: flex;
+  color: var(--accent);
+}
+
+.countdown-timer__time {
+  font-variant-numeric: tabular-nums;
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.countdown-timer--warning .countdown-timer__time {
+  animation: countdownPulse 1s ease infinite;
+}
+
+@keyframes countdownPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}

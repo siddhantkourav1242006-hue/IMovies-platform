@@ -1,0 +1,22 @@
+.watchlist-page {
+  padding: 40px 0 64px;
+}
+
+.watchlist-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.watchlist-title {
+  font-size: 28px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  margin-bottom: 6px;
+}
+
+.watchlist-desc {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}

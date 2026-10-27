@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard — IMovies Control Center</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="navbar-brand"><i class="fas fa-film"></i> <span>I</span>Movies <span style="font-size:0.8rem; background:rgba(0,212,255,0.15); color:var(--accent); padding:2px 8px; border-radius:4px; margin-left:6px;">ADMIN</span></a>
+    <div class="nav-links">
+      <a href="/" class="nav-link">Back to Website</a>
+    </div>
+    <div class="nav-auth" id="nav-auth"></div>
+  </nav>
+
+  <div id="toast-container"></div>
+
+  <div class="admin-layout">
+    <!-- Sidebar -->
+    <aside class="admin-sidebar">
+      <div class="admin-nav-item active" data-target="overview">
+        <i class="fas fa-chart-line"></i> Overview
+      </div>
+      <div class="admin-nav-item" data-target="movies">
+        <i class="fas fa-film"></i> Movies Catalog
+      </div>
+      <div class="admin-nav-item" data-target="bookings">
+        <i class="fas fa-ticket-alt"></i> Bookings Ledger
+      </div>
+      <div class="admin-nav-item" data-target="coupons">
+        <i class="fas fa-tags"></i> Coupons & Offers
+      </div>
+      <div class="admin-nav-item" data-target="fnb">
+        <i class="fas fa-utensils"></i> F&B Concessions
+      </div>
+    </aside>
+
+    <!-- Main Admin Workspace -->
+    <main class="admin-content">
+      <!-- 1. OVERVIEW SECTION -->
+      <section id="section-overview" class="admin-section">
+        <h2 style="font-size:1.6rem; font-weight:800; color:#fff; margin-bottom:1.5rem;">System Overview</h2>
+        <div class="stat-grid">
+          <div class="stat-card">
+            <span style="color:var(--text-muted); font-size:0.85rem;"><i class="fas fa-film"></i> Total Movies</span>
+            <div class="stat-val" id="stat-total-movies">0</div>
+          </div>
+          <div class="stat-card">
+            <span style="color:var(--text-muted); font-size:0.85rem;"><i class="fas fa-ticket-alt"></i> Total Reservations</span>
+            <div class="stat-val" id="stat-total-bookings">0</div>
+          </div>
+          <div class="stat-card">
+            <span style="color:var(--text-muted); font-size:0.85rem;"><i class="fas fa-rupee-sign"></i> Gross Revenue</span>
+            <div class="stat-val" id="stat-total-revenue" style="color:var(--success);">₹0</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. MOVIES SECTION -->
+      <section id="section-movies" class="admin-section" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <h2 style="font-size:1.6rem; font-weight:800; color:#fff;">Manage Movies</h2>
+          <button class="btn btn-primary" onclick="document.getElementById('modal-add-movie').classList.add('active')">
+            <i class="fas fa-plus"></i> Add Movie
+          </button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Poster</th>
+                <th>Title</th>
+                <th>Language</th>
+                <th>Genres</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="admin-movies-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 3. BOOKINGS SECTION -->
+      <section id="section-bookings" class="admin-section" style="display:none;">
+        <h2 style="font-size:1.6rem; font-weight:800; color:#fff; margin-bottom:1.5rem;">Reservations Ledger</h2>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Booking ID</th>
+                <th>User</th>
+                <th>Movie</th>
+                <th>Theater</th>
+                <th>Seats</th>
+                <th>Amount</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-bookings-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 4. COUPONS SECTION -->
+      <section id="section-coupons" class="admin-section" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <h2 style="font-size:1.6rem; font-weight:800; color:#fff;">Coupons & Promos</h2>
+          <button class="btn btn-primary" onclick="document.getElementById('modal-add-coupon').classList.add('active')">
+            <i class="fas fa-plus"></i> Create Coupon
+          </button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Code</th>
+                <th>Discount</th>
+                <th>Min Spend</th>
+                <th>Redemptions</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="admin-coupons-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- 5. F&B SECTION -->
+      <section id="section-fnb" class="admin-section" style="display:none;">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <h2 style="font-size:1.6rem; font-weight:800; color:#fff;">Concessions Menu</h2>
+          <button class="btn btn-primary" onclick="document.getElementById('modal-add-fnb').classList.add('active')">
+            <i class="fas fa-plus"></i> Add Snack Item
+          </button>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>Icon</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Inventory</th>
+              </tr>
+            </thead>
+            <tbody id="admin-fnb-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Modal: Add Movie -->
+  <div class="modal-overlay" id="modal-add-movie">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 style="color:#fff;">Publish New Movie</h3>
+        <button class="close-modal" onclick="document.getElementById('modal-add-movie').classList.remove('active')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="add-movie-form">
+          <div class="form-group">
+            <label>Title</label>
+            <input type="text" id="m-title" class="form-control" required/>
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea id="m-desc" class="form-control" rows="3" required></textarea>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Genre (comma separated)</label>
+              <input type="text" id="m-genre" class="form-control" placeholder="Action, Sci-Fi" required/>
+            </div>
+            <div class="form-group">
+              <label>Language</label>
+              <input type="text" id="m-lang" class="form-control" placeholder="English" required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Duration (Minutes)</label>
+              <input type="number" id="m-duration" class="form-control" value="145" required/>
+            </div>
+            <div class="form-group">
+              <label>Certification</label>
+              <select id="m-cert" class="form-control">
+                <option value="UA">UA</option>
+                <option value="U">U</option>
+                <option value="A">A</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Poster Image URL</label>
+            <input type="url" id="m-poster" class="form-control" placeholder="https://..." required/>
+          </div>
+          <div class="form-group">
+            <label>Wide Banner URL</label>
+            <input type="url" id="m-banner" class="form-control" placeholder="https://..."/>
+          </div>
+          <div class="form-group">
+            <label>YouTube Trailer Embed URL</label>
+            <input type="url" id="m-trailer" class="form-control" placeholder="https://www.youtube.com/embed/..."/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Release Status</label>
+              <select id="m-status" class="form-control">
+                <option value="now-showing">Now Showing</option>
+                <option value="coming-soon">Coming Soon</option>
+              </select>
+            </div>
+            <div class="form-group" style="display:flex; align-items:center; gap:0.6rem; padding-top:1.5rem;">
+              <input type="checkbox" id="m-featured" style="width:18px; height:18px;"/>
+              <label for="m-featured" style="margin:0; cursor:pointer;">Feature in Top Hero</label>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;">Publish Movie</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add Coupon -->
+  <div class="modal-overlay" id="modal-add-coupon">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 style="color:#fff;">Create Discount Promo</h3>
+        <button class="close-modal" onclick="document.getElementById('modal-add-coupon').classList.remove('active')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="add-coupon-form">
+          <div class="form-group">
+            <label>Coupon Code (e.g. MOVIE50)</label>
+            <input type="text" id="c-code" class="form-control" required/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Discount Type</label>
+              <select id="c-type" class="form-control">
+                <option value="percentage">Percentage (%)</option>
+                <option value="flat">Flat Amount (₹)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Discount Value</label>
+              <input type="number" id="c-val" class="form-control" required/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Max Cap (₹, 0 for unlimited)</label>
+              <input type="number" id="c-max" class="form-control" value="200"/>
+            </div>
+            <div class="form-group">
+              <label>Min Booking Amount (₹)</label>
+              <input type="number" id="c-min" class="form-control" value="300"/>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Valid Until</label>
+              <input type="date" id="c-valid" class="form-control" value="2027-12-31" required/>
+            </div>
+            <div class="form-group">
+              <label>Usage Limit</label>
+              <input type="number" id="c-limit" class="form-control" value="500"/>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;">Create Coupon</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Add F&B Item -->
+  <div class="modal-overlay" id="modal-add-fnb">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 style="color:#fff;">Add Concessions Menu Item</h3>
+        <button class="close-modal" onclick="document.getElementById('modal-add-fnb').classList.remove('active')"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body">
+        <form id="add-fnb-form">
+          <div class="form-group">
+            <label>Item Name</label>
+            <input type="text" id="f-name" class="form-control" placeholder="Caramel Popcorn Large" required/>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Category</label>
+              <select id="f-category" class="form-control">
+                <option value="popcorn">Popcorn</option>
+                <option value="beverage">Beverage</option>
+                <option value="combo">Combo</option>
+                <option value="snack">Snack</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Price (₹)</label>
+              <input type="number" id="f-price" class="form-control" value="250" required/>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Emoji Icon (e.g. 🍿, 🥤, 🌭, 🍕)</label>
+            <input type="text" id="f-icon" class="form-control" value="🍿"/>
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top:1rem;">Save Menu Item</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/admin.js"></script>
+</body>
+</html>

@@ -1,0 +1,137 @@
+.my-tickets-page {
+  padding: 40px 0 64px;
+}
+
+.tickets-page-container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.tickets-title {
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+  margin-bottom: 4px;
+}
+
+.tickets-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 32px;
+}
+
+.tickets-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.ticket-item-card {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 20px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+}
+
+.ticket-status-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.ticket-status-badge[data-status="confirmed"] {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #10b981;
+}
+
+.ticket-status-badge[data-status="cancelled"] {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+}
+
+.ticket-item-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ticket-item-meta {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.ticket-item-seats {
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+}
+
+.ticket-item-side {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.ticket-item-amount {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.ticket-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.view-ticket-link {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.view-ticket-link:hover {
+  text-decoration: underline;
+}
+
+.cancel-ticket-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 5px 12px;
+  border-radius: var(--radius-sm);
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.cancel-ticket-btn:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+@media (max-width: 640px) {
+  .ticket-item-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .ticket-item-side {
+    align-items: flex-start;
+    width: 100%;
+    border-top: 1px solid var(--border);
+    padding-top: 14px;
+  }
+}

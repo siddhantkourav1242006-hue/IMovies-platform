@@ -1,0 +1,134 @@
+.movie-detail-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.detail-container {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.detail-hero {
+  background-color: var(--banner-bg, #121316);
+  color: #ffffff;
+  padding: 48px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.hero-grid {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+.hero-poster {
+  aspect-ratio: 2 / 3;
+  border-radius: var(--radius-md);
+  padding: 24px;
+  display: flex;
+  align-items: flex-end;
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.hero-poster-title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.4px;
+}
+
+.hero-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.hero-badges {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.genre-pill, .lang-pill {
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e0e0e0;
+}
+
+.hero-title {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: -0.6px;
+  margin-bottom: 12px;
+  line-height: 1.15;
+}
+
+.hero-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  color: #9ca3af;
+  margin-bottom: 20px;
+}
+
+.star-icon {
+  color: #eab308;
+}
+
+.bullet {
+  opacity: 0.4;
+}
+
+.hero-synopsis {
+  font-size: 15px;
+  line-height: 1.6;
+  color: #d1d5db;
+  max-width: 680px;
+  margin-bottom: 24px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.detail-shows-section {
+  padding: 40px 0 64px;
+}
+
+.shows-header {
+  margin-bottom: 20px;
+}
+
+.shows-section-title {
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  margin-bottom: 4px;
+}
+
+.shows-section-subtitle {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.theatres-showtimes-wrapper {
+  margin-top: 24px;
+}
+
+@media (max-width: 768px) {
+  .hero-grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  .hero-poster {
+    max-width: 200px;
+  }
+}

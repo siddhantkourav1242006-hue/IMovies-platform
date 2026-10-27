@@ -1,0 +1,65 @@
+.booking-summary {
+  background-color: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+}
+
+.booking-summary__title {
+  font-size: var(--font-size-lg);
+  font-weight: 600;
+  margin-bottom: var(--space-md);
+}
+
+.booking-summary__row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-sm) 0;
+  font-size: var(--font-size-sm);
+}
+
+.booking-summary__label {
+  color: var(--text-secondary);
+}
+
+.booking-summary__value {
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.booking-summary__seats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xs);
+  justify-content: flex-end;
+}
+
+.booking-summary__seat-tag {
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+  background-color: var(--border-light);
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+}
+
+.booking-summary__divider {
+  height: 1px;
+  background-color: var(--border-light);
+  margin: var(--space-sm) 0;
+}
+
+.booking-summary__total {
+  font-size: var(--font-size-md);
+  font-weight: 600;
+}
+
+.booking-summary__actions {
+  margin-top: var(--space-md);
+}
+
+.booking-summary__max-hint {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+  margin-top: var(--space-sm);
+}

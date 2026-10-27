@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IMovies — Book Cinema Tickets Online</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+
+  <!-- Top Navbar -->
+  <nav class="navbar" id="navbar">
+    <a href="/" class="navbar-brand">
+      <i class="fas fa-film"></i>
+      <span>I</span>Movies
+    </a>
+    <div class="nav-links">
+      <a href="/" class="nav-link active">Home</a>
+      <a href="/pages/bookings.html" class="nav-link">My Bookings</a>
+      <a href="/pages/wishlist.html" class="nav-link">Wishlist</a>
+    </div>
+    <div class="nav-auth" id="nav-auth"></div>
+    <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <div class="nav-mobile" id="nav-mobile"></div>
+  <div id="toast-container"></div>
+
+  <!-- Hero Carousel -->
+  <section class="hero-carousel" id="hero-carousel"></section>
+
+  <!-- Filter & Search Bar -->
+  <div class="filter-bar">
+    <div class="container filter-wrapper">
+      <div class="search-box">
+        <i class="fas fa-search"></i>
+        <input type="text" id="search-input" placeholder="Search movies, genres, languages..." autocomplete="off">
+      </div>
+      <div class="filter-chips">
+        <div class="chip genre-chip active" data-genre="All">All Genres</div>
+        <div class="chip genre-chip" data-genre="Action">Action</div>
+        <div class="chip genre-chip" data-genre="Sci-Fi">Sci-Fi</div>
+        <div class="chip genre-chip" data-genre="Drama">Drama</div>
+        <div class="chip genre-chip" data-genre="Thriller">Thriller</div>
+        <div class="chip genre-chip" data-genre="Comedy">Comedy</div>
+        <div class="chip genre-chip" data-genre="Adventure">Adventure</div>
+      </div>
+      <div class="filter-chips">
+        <div class="chip lang-chip active" data-lang="All">All Langs</div>
+        <div class="chip lang-chip" data-lang="English">English</div>
+        <div class="chip lang-chip" data-lang="Hindi">Hindi</div>
+        <div class="chip lang-chip" data-lang="Telugu">Telugu</div>
+        <div class="chip lang-chip" data-lang="Kannada">Kannada</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Catalog Content -->
+  <main class="container">
+    <div class="tabs">
+      <div class="tab active" id="tab-now-showing">Now Showing</div>
+      <div class="tab" id="tab-coming-soon">Coming Soon</div>
+    </div>
+    <div class="movie-grid" id="movie-grid"></div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="/" class="navbar-brand"><i class="fas fa-film"></i> <span>I</span>Movies</a>
+        <p>The ultimate seamless online cinema experience with instant seat booking, real-time availability tracking, and savory F&B choices.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Navigation</h4>
+        <a href="/">Browse Movies</a>
+        <a href="/pages/bookings.html">My Bookings</a>
+        <a href="/pages/wishlist.html">Saved Wishlist</a>
+      </div>
+      <div class="footer-col">
+        <h4>Cinema Partners</h4>
+        <a href="#">PVR Cinemas</a>
+        <a href="#">INOX Megaplex</a>
+        <a href="#">Cinépolis Luxe</a>
+      </div>
+      <div class="footer-col">
+        <h4>Support & Legal</h4>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Help & FAQs</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      &copy; 2026 IMovies Inc. Built with Express.js & MongoDB.
+    </div>
+  </footer>
+
+  <script src="/js/utils.js"></script>
+  <script src="/js/app.js"></script>
+  <script src="/js/movies.js"></script>
+</body>
+</html>

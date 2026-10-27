@@ -1,0 +1,40 @@
+.seat-legend {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+  justify-content: center;
+  padding: var(--space-md) 0;
+}
+
+.seat-legend__item {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  font-size: var(--font-size-xs);
+  color: var(--text-secondary);
+}
+
+.seat-legend__swatch {
+  width: 16px;
+  height: 16px;
+  border-radius: 3px;
+}
+
+.seat-legend__swatch--available {
+  border: 1px solid var(--border);
+  background-color: transparent;
+}
+
+.seat-legend__swatch--selected {
+  background-color: var(--accent);
+}
+
+.seat-legend__swatch--booked {
+  background-color: var(--text-tertiary);
+  opacity: 0.5;
+}
+
+.seat-legend__swatch--locked {
+  background-color: var(--border-light);
+  border: 1px solid var(--border);
+}

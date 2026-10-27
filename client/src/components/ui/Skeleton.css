@@ -1,0 +1,38 @@
+.skeleton {
+  background-color: var(--border-light);
+  border-radius: var(--radius-sm);
+  animation: skeletonPulse 1.5s ease-in-out infinite;
+}
+
+.skeleton--text {
+  height: 14px;
+  width: 100%;
+}
+
+.skeleton--title {
+  height: 20px;
+  width: 60%;
+}
+
+.skeleton--card {
+  border-radius: var(--radius-lg);
+  aspect-ratio: 2/3;
+}
+
+.skeleton--rect {
+  height: 100%;
+  width: 100%;
+}
+
+.skeleton--circle {
+  border-radius: 50%;
+}
+
+@keyframes skeletonPulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
