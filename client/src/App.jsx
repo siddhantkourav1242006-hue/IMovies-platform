@@ -22,12 +22,56 @@ import LoginPage from './pages/LoginPage';
 import SignupPage from './pages/SignupPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 
+import React from 'react';
+
+class ErrorBoundary extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = { hasError: false, error: null };
+  }
+  static getDerivedStateFromError(error) {
+    return { hasError: true, error };
+  }
+  componentDidCatch(error, errorInfo) {
+    console.error('UI Error caught by boundary:', error, errorInfo);
+  }
+  render() {
+    if (this.state.hasError) {
+      return (
+        <div style={{ padding: '60px 20px', textAlign: 'center', maxWidth: '500px', margin: '0 auto' }}>
+          <h2 style={{ marginBottom: '12px', fontSize: '1.4rem' }}>Something went wrong</h2>
+          <p style={{ color: 'var(--text-secondary, #999)', marginBottom: '20px', fontSize: '0.9rem' }}>
+            {this.state.error?.message || 'An unexpected error occurred while loading this view.'}
+          </p>
+          <button
+            onClick={() => { this.setState({ hasError: false }); window.location.hash = '#/'; }}
+            style={{
+              padding: '10px 20px',
+              backgroundColor: 'var(--accent, #d6283b)',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '6px',
+              cursor: 'pointer',
+              fontWeight: 600,
+            }}
+          >
+            Return to Home
+          </button>
+        </div>
+      );
+    }
+    return this.props.children;
+  }
+}
+
 function AppLayout() {
   return (
     <div className="app-shell" style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
       <Header />
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-        <Outlet />
+        <ErrorBoundary>
+          <Outlet />
+        </ErrorBoundary>
       </main>
       <Footer />
     </div>

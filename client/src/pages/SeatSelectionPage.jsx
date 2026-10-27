@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import showService from '../services/showService';
 import seatService from '../services/seatService';
+import { MOCK_MOVIES } from '../services/mockData';
 import { useAuth } from '../hooks/useAuth';
 import { useSocket } from '../hooks/useSocket';
 import { useBooking } from '../hooks/useBooking';
@@ -17,7 +18,7 @@ export default function SeatSelectionPage() {
   const { showId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const socket = useSocket();
+  const socket = useSocket(showId);
   const { setMovie, setShow } = useBooking();
 
   const [show, setShowState] = useState(null);
@@ -36,16 +37,28 @@ export default function SeatSelectionPage() {
     let isMounted = true;
     setLoading(true);
 
+    const getSeats = seatService.getSeatMap
+      ? seatService.getSeatMap(showId)
+      : seatService.getByShow(showId);
+
     Promise.all([
       showService.getById(showId),
-      seatService.getSeatMap(showId),
+      getSeats,
     ])
       .then(([showRes, seatsRes]) => {
         if (!isMounted) return;
         const sData = showRes.data?.data || showRes.data;
         setShowState(sData);
-        setMovieState(sData.movieId);
-        setMovie(sData.movieId);
+
+        let mData = sData?.movieId;
+        if (!mData || typeof mData === 'string' || !mData.title) {
+          const found = MOCK_MOVIES.find((m) => m._id === (mData?._id || mData));
+          if (found) mData = found;
+          else mData = { _id: 'm1', title: 'Featured Movie' };
+        }
+
+        setMovieState(mData);
+        setMovie(mData);
         setShow(sData);
 
         const rawSeats = seatsRes.data?.data || [];
@@ -68,10 +81,10 @@ export default function SeatSelectionPage() {
   useEffect(() => {
     if (!socket || !showId) return;
 
-    socket.emit('join:show', showId);
+    socket.emit?.('join:show', showId);
 
     const handleSeatsLocked = (payload) => {
-      if (payload.showId === showId) {
+      if (payload && payload.showId === showId) {
         setSeats((prev) =>
           prev.map((seat) => {
             const isTarget = payload.seats?.some(
@@ -87,7 +100,7 @@ export default function SeatSelectionPage() {
     };
 
     const handleSeatsUnlocked = (payload) => {
-      if (payload.showId === showId) {
+      if (payload && payload.showId === showId) {
         setSeats((prev) =>
           prev.map((seat) => {
             const isTarget = payload.seats?.some(
@@ -103,7 +116,7 @@ export default function SeatSelectionPage() {
     };
 
     const handleSeatsBooked = (payload) => {
-      if (payload.showId === showId) {
+      if (payload && payload.showId === showId) {
         setSeats((prev) =>
           prev.map((seat) => {
             const isTarget = payload.seats?.some(
@@ -118,15 +131,15 @@ export default function SeatSelectionPage() {
       }
     };
 
-    socket.on('seats:locked', handleSeatsLocked);
-    socket.on('seats:unlocked', handleSeatsUnlocked);
-    socket.on('seats:booked', handleSeatsBooked);
+    socket.on?.('seats:locked', handleSeatsLocked);
+    socket.on?.('seats:unlocked', handleSeatsUnlocked);
+    socket.on?.('seats:booked', handleSeatsBooked);
 
     return () => {
-      socket.emit('leave:show', showId);
-      socket.off('seats:locked', handleSeatsLocked);
-      socket.off('seats:unlocked', handleSeatsUnlocked);
-      socket.off('seats:booked', handleSeatsBooked);
+      socket.emit?.('leave:show', showId);
+      socket.off?.('seats:locked', handleSeatsLocked);
+      socket.off?.('seats:unlocked', handleSeatsUnlocked);
+      socket.off?.('seats:booked', handleSeatsBooked);
     };
   }, [socket, showId, user]);
 

@@ -15,20 +15,32 @@ const seatService = {
     return { data: { success: true, count: seats.length, data: seats } };
   },
 
+  async getSeatMap(showId) {
+    return this.getByShow(showId);
+  },
+
   async lock(showId, seatIds) {
     try {
       return await api.post(`/seats/lock`, { showId, seatIds });
     } catch (e) {
       // In offline/standalone mode, accept lock
+      const list = Array.isArray(seatIds) ? seatIds : [];
       return {
         data: {
           success: true,
           data: {
-            lockedSeats: seatIds.map((id) => ({ _id: id, status: 'locked' })),
+            lockedSeats: list.map((id) => ({
+              _id: typeof id === 'object' ? `${id.row || ''}${id.number || ''}` : id,
+              status: 'locked',
+            })),
           },
         },
       };
     }
+  },
+
+  async lockSeats(showId, seats) {
+    return this.lock(showId, seats);
   },
 
   async unlock(showId, seatIds) {
@@ -37,6 +49,10 @@ const seatService = {
     } catch (e) {
       return { data: { success: true } };
     }
+  },
+
+  async unlockSeats(showId, seats) {
+    return this.unlock(showId, seats);
   },
 };
 
