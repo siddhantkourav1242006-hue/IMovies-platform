@@ -51,11 +51,21 @@ export default function TicketPage() {
     );
   }
 
+  const seatLabels = (booking.seats || []).map((s) => {
+    if (typeof s === 'string') return s;
+    if (s.row && s.number) return `${s.row}${s.number}`;
+    return s.label || s.id || 'Seat';
+  });
+
   const qrPayload = JSON.stringify({
     bookingId: booking._id,
-    seats: booking.seats.map((s) => `${s.row}${s.number}`),
+    seats: seatLabels,
     showId: booking.showId?._id || booking.showId,
   });
+
+  const formattedDate = booking.bookedAt
+    ? new Date(booking.bookedAt).toLocaleDateString()
+    : new Date().toLocaleDateString();
 
   return (
     <div className="ticket-page">
@@ -65,7 +75,7 @@ export default function TicketPage() {
             ✓ Booking Confirmed
           </div>
 
-          <h1 className="ticket-movie-title">{booking.movieId?.title}</h1>
+          <h1 className="ticket-movie-title">{booking.movieId?.title || 'Movie'}</h1>
           <p className="ticket-booking-ref">Booking ID: {booking._id}</p>
 
           <div className="ticket-qr-wrapper">
@@ -87,13 +97,13 @@ export default function TicketPage() {
             <div className="detail-cell">
               <span className="cell-label">SHOWTIME</span>
               <span className="cell-value">
-                {booking.showId?.time || 'Show'} • {new Date(booking.bookedAt).toLocaleDateString()}
+                {booking.showId?.time || 'Show'} • {formattedDate}
               </span>
             </div>
             <div className="detail-cell">
               <span className="cell-label">SEATS</span>
               <span className="cell-value">
-                {booking.seats.map((s) => `${s.row}${s.number}`).join(', ')}
+                {seatLabels.join(', ')}
               </span>
             </div>
             <div className="detail-cell">

@@ -76,7 +76,7 @@ export default function MyTicketsPage() {
                     {b.theatreId?.name || 'Theatre'} • {b.showId?.time || 'Showtime'}
                   </p>
                   <p className="ticket-item-seats">
-                    Seats: {b.seats.map((s) => `${s.row}${s.number}`).join(', ')}
+                    Seats: {(b.seats || []).map((s) => (typeof s === 'string' ? s : s.row && s.number ? `${s.row}${s.number}` : s.label || s.id || 'Seat')).join(', ')}
                   </p>
                 </div>
 

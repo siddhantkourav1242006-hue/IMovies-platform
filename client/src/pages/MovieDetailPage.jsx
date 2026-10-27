@@ -211,13 +211,36 @@ export default function MovieDetailPage() {
     );
   }
 
+  const heroStyle = movie.backdropUrl
+    ? {
+        backgroundImage: `linear-gradient(to right, rgba(14, 14, 16, 0.95) 0%, rgba(14, 14, 16, 0.85) 45%, rgba(14, 14, 16, 0.4) 100%), url(${movie.backdropUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+      }
+    : {};
+
   return (
     <div className="movie-detail-page">
       {/* Movie Hero Meta Bar */}
-      <section className="detail-hero">
+      <section className="detail-hero" style={heroStyle}>
         <div className="detail-container hero-grid">
-          <div className="hero-poster" style={{ backgroundColor: movie.posterColor || '#1a1a2e' }}>
-            <span className="hero-poster-title">{movie.title}</span>
+          <div
+            className="hero-poster"
+            style={{
+              backgroundColor: movie.posterColor || '#1a1a2e',
+              padding: movie.posterUrl ? 0 : 24,
+              overflow: 'hidden',
+            }}
+          >
+            {movie.posterUrl ? (
+              <img
+                src={movie.posterUrl}
+                alt={movie.title}
+                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              />
+            ) : (
+              <span className="hero-poster-title">{movie.title}</span>
+            )}
           </div>
 
           <div className="hero-info">

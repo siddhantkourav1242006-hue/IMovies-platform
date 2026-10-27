@@ -65,8 +65,8 @@ function PosterShape({ shape, size = 80 }) {
 export default function MovieCard({ movie }) {
   const navigate = useNavigate();
   const hash = hashCode(movie.title || 'movie');
-  const bgColor = POSTER_COLORS[hash % POSTER_COLORS.length];
-  const shape = SHAPES[hash % SHAPES.length];
+  const bgColor = movie.posterColor || POSTER_COLORS[hash % POSTER_COLORS.length];
+  const shape = movie.posterShape || SHAPES[hash % SHAPES.length];
 
   const handleClick = () => {
     navigate(`/movies/${movie.slug}`);
@@ -80,10 +80,29 @@ export default function MovieCard({ movie }) {
   return (
     <div className="movie-card" onClick={handleClick} tabIndex={0} role="link" aria-label={`View ${movie.title}`}>
       <div className="movie-card__poster">
-        <div className="movie-card__poster-inner" style={{ backgroundColor: bgColor }}>
-          <PosterShape shape={shape} />
-          <span className="movie-card__poster-title">{movie.title}</span>
-        </div>
+        {movie.posterUrl ? (
+          <div className="movie-card__poster-wrapper">
+            <img
+              src={movie.posterUrl}
+              alt={movie.title}
+              className="movie-card__img"
+              loading="lazy"
+              onError={(e) => {
+                e.target.style.display = 'none';
+                e.target.nextSibling.style.display = 'flex';
+              }}
+            />
+            <div className="movie-card__poster-inner" style={{ backgroundColor: bgColor, display: 'none' }}>
+              <PosterShape shape={shape} />
+              <span className="movie-card__poster-title">{movie.title}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="movie-card__poster-inner" style={{ backgroundColor: bgColor }}>
+            <PosterShape shape={shape} />
+            <span className="movie-card__poster-title">{movie.title}</span>
+          </div>
+        )}
       </div>
       <div className="movie-card__info">
         <h3 className="movie-card__title">{movie.title}</h3>

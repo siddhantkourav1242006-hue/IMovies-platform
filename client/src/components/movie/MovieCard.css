@@ -24,6 +24,24 @@
   }
 }
 
+.movie-card__poster-wrapper {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.movie-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.3s ease;
+}
+
+.movie-card:hover .movie-card__img {
+  transform: scale(1.05);
+}
+
 .movie-card__poster-inner {
   width: 100%;
   height: 100%;

@@ -9,10 +9,13 @@ const bookingService = {
       const mockBooking = {
         _id: mockBookingId,
         bookingId: mockBookingId,
+        movieId: data.movieId || data.movie || { title: 'Dune: Part Two', duration: 166, language: 'English' },
+        theatreId: data.theatreId || data.theatre || { name: 'PVR INOX: Phoenix Palladium', city: 'Mumbai' },
+        showId: data.showId || data.show || { time: '05:15 PM', date: new Date().toISOString() },
         seats: data.seats || [{ row: 'A', number: 1, type: 'standard' }],
-        totalAmount: 500,
+        totalAmount: data.totalAmount || 500,
         status: 'confirmed',
-        bookedAt: new Date(),
+        bookedAt: new Date().toISOString(),
       };
       // Store in localStorage for My Tickets
       const existing = JSON.parse(localStorage.getItem('imovies_user_bookings') || '[]');
@@ -46,10 +49,11 @@ const bookingService = {
       bookingId: id,
       movieId: { title: 'Dune: Part Two', duration: 166, language: 'English' },
       theatreId: { name: 'PVR INOX: Phoenix Palladium', city: 'Mumbai' },
-      showId: { time: '05:15 PM', date: new Date() },
+      showId: { time: '05:15 PM', date: new Date().toISOString() },
       seats: [{ row: 'D', number: 4, type: 'premium' }, { row: 'D', number: 5, type: 'premium' }],
       totalAmount: 550,
       status: 'confirmed',
+      bookedAt: new Date().toISOString(),
     };
     return { data: { success: true, data: b } };
   },

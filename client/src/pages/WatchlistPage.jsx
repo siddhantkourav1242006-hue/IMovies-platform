@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import favoriteService from '../services/favoriteService';
+import { MOCK_MOVIES } from '../services/mockData';
 import MovieGrid from '../components/movie/MovieGrid';
 import './WatchlistPage.css';
 
@@ -16,7 +17,15 @@ export default function WatchlistPage() {
       .then((res) => {
         if (!isMounted) return;
         const list = res.data?.data || [];
-        const movies = list.map((item) => item.movieId).filter(Boolean);
+        const movies = list
+          .map((item) => {
+            const m = item.movieId || item;
+            if (typeof m === 'string') {
+              return MOCK_MOVIES.find((x) => x._id === m) || null;
+            }
+            return m;
+          })
+          .filter(Boolean);
         setFavorites(movies);
       })
       .catch((err) => {
